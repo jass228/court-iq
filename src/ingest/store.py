@@ -1,7 +1,7 @@
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 
-from .ingest.context import build_contextual_text
+from .context import build_contextual_text
 from .embed import get_embeddings
 
 DEFAULT_PERSIST_DIRECTORY = "storage/chroma"

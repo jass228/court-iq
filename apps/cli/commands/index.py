@@ -1,7 +1,7 @@
 import typer
 from src.ingest.load import load_pdf
 from src.ingest.chunk import chunk_document
-from src.store import create_vector_store
+from src.ingest.store import create_vector_store
 
 
 app = typer.Typer(help="CLI for indexing PDF files into a vector store.")

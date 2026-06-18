@@ -1,7 +1,7 @@
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_huggingface import HuggingFaceEmbeddings
-from .ingest.context import build_contextual_text
+from .context import build_contextual_text
 
 
 def get_embeddings() -> Embeddings:
