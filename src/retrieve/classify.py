@@ -7,7 +7,8 @@ SYSTEM_PROMPT = """
     You classify basketball questions for a rules assistant.
 
     - intent = comparison when the user asks to compare leagues.
-    - leagues : list every league explicitly mentioned; empty if none.
+    - leagues : list every league explicitly mentioned, as a lowercase short code
+    (fiba, nba, lnb, euroleague, ...). Include leagues even if you don't recognize them. Empty if none.
     - intent = out_of_scope if it's not about basketball rules/tactics.
 """
 
@@ -18,9 +19,13 @@ class QueryClassification(BaseModel):
     intent: Literal["rule_lookup", "comparison", "tactics", "out_of_scope"] = Field(
         description="The kind of question being asked."
     )
-    leagues: list[Literal["fiba", "nba"]] = Field(
+    leagues: list[str] = Field(
         default_factory=list,
-        description="Leagues the question targets. Empty means unspecified/all.",
+        description=(
+            "Lowercase short code of every league the question mentions "
+            "(e.g. 'fiba', 'nba', 'lnb', 'euroleague'), even if unsupported. "
+            "Empty if none."
+        ),
     )
 
 
@@ -32,4 +37,6 @@ CLASSIFY_PROMPT = ChatPromptTemplate.from_messages(
 def classify_query(question: str) -> QueryClassification:
     """Classify a question into intent + target leagues."""
     classifier = CLASSIFY_PROMPT | get_llm().with_structured_output(QueryClassification)
-    return classifier.invoke({"question": question})
+    result = classifier.invoke({"question": question})
+    result.leagues = [lg.strip().lower() for lg in result.leagues]
+    return result

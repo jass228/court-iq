@@ -1,9 +1,11 @@
+from functools import lru_cache
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_huggingface import HuggingFaceEmbeddings
 from .context import build_contextual_text
 
 
+@lru_cache(maxsize=1)
 def get_embeddings() -> Embeddings:
     """Return a HuggingFaceEmbeddings instance for generating embeddings."""
     return HuggingFaceEmbeddings(

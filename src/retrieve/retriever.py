@@ -6,7 +6,8 @@ from src.ingest.embed import get_embeddings
 def get_retriever(
     top_k: int = 5,
     persist_directory: str = "storage/chroma",
-    collection_name: str = "fiba_rules",
+    collection_name: str = "rules",
+    league: str | list[str] | None = None,
 ) -> VectorStoreRetriever:
     """Connect to the persisted Chroma index and expose it as a retriever."""
     vectorestore = Chroma(
@@ -15,4 +16,10 @@ def get_retriever(
         embedding_function=get_embeddings(),
     )
 
-    return vectorestore.as_retriever(search_kwargs={"k": top_k})
+    search_kwargs = {"k": top_k}
+    if league is not None:
+        search_kwargs["filter"] = (
+            {"league": {"$in": league}} if isinstance(league, list) else {"league": league}
+        )
+
+    return vectorestore.as_retriever(search_kwargs=search_kwargs)

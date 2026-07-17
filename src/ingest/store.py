@@ -5,7 +5,7 @@ from .context import build_contextual_text
 from .embed import get_embeddings
 
 DEFAULT_PERSIST_DIRECTORY = "storage/chroma"
-DEFAULT_COLLECTION_NAME = "fiba_rules"
+DEFAULT_COLLECTION_NAME = "rules"
 
 
 def _clean_metadata(metadata: dict) -> dict:
